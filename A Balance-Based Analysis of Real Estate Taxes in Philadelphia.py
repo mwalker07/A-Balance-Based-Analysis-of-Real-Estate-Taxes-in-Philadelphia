@@ -28,6 +28,16 @@ st.divider()
 
 st.bar_chart(byZIPCode.set_index("zip_code")["balance"])
 
+dataFile["delinquencyPeriod"]=dataFile["max_period"]-dataFile["min_period"]
+plt.figure(figsize=(5,3)) #create a scatter plot
+plt.scatter(dataFile["delinquencyPeriod"], dataFile["avg_balance"], s=dataFile["num_props"]*2, alpha=0.5) #size of points based on number of properties
+
+plt.xlabel("Delinquency Period (years)") #labels and title
+plt.ylabel("Average Balance")
+plt.title("Why do some ZIP codes have higher average balances than others? (severity and time)")
+plt.grid(True)
+st.pyplot(plt) #display the plot in Streamlit
+
 #for col in sumColumns:
 #    dataFile[col]=pd.to_numeric(dataFile[col], errors="coerce") #----
 #dataFile=dataFile.dropna() #drop rows with missing values
