@@ -38,6 +38,12 @@ plt.title("Why do some ZIP codes have higher average balances than others? (seve
 plt.grid(True)
 st.pyplot(plt) #display the plot in Streamlit
 
+st.subheader("Conclusion") #conclusion based on the analysis
+st.write("As a way to sort of visualize/summarize the entire data file I created two visuals that display key trends, and when viewed together, reveal how different aspects of the data are interconnected.")
+st.write("  -The bar chart (x-axis: zip code, y-axis: total balances) works to show exactly where real estate tax delinquency is an issue and to what extent, allowing you to compare the scale across neighborhoods.")
+st.write("  -The scatter plot answers why there may be a high balance in certain areas. Considering the possibility of long-term unpaid taxes or is it many properties vs a few extreme ones?")
+st.write("From this, it can be concluded that most ZIP codes have relatively low or average tax delinquency levels, while a small number of them stand out with disproportionately high balances. However, some of the high-balance areas do not have especially long delinquency periods, suggesting that debts may have accumulated quickly and are not solely determined by how long taxes go unpaid.")
+
 #for col in sumColumns:
 #    dataFile[col]=pd.to_numeric(dataFile[col], errors="coerce") #----
 #dataFile=dataFile.dropna() #drop rows with missing values
