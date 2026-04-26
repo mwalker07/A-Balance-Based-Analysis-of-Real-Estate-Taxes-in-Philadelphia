@@ -1,18 +1,14 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-#from rich import print
-
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
 
-st.title("A Balance-Based Analysis of Real Estate Taxes in Philadelphia")
+st.title("A Balance-Based Analysis of Real Estate Taxes in Philadelphia") #title of the project
 
 st.write("This project analyzes a dataset published on OpenDataPhilly, which summarizes delinquent real estate taxes in the city of Philadelphia (categorized by ZIP code). Each column is a piece of a larger picture, and together they show how tax debt varies across different areas.") #introduction
 
-my_map = folium.Map(location=[39.9526, -75.1652], zoom_start=12, width=300, height=200)
-#location=[39.9526, -75.1652], zoom_start=12) #map centered on Philadelphia
-#folium.Marker([39.9526, -75.1652], popup="Philadelphia").add_to(my_map)
+my_map = folium.Map(location=[39.9526, -75.1652], zoom_start=12, width=300, height=200) #a map centered on Philadelphia
 st_folium(my_map)
 
 dataFile=pd.read_csv("real_estate_tax_balances_zip_code.csv") #load the data file
@@ -26,7 +22,7 @@ byZIPCode=dataFile.groupby("zip_code").agg({"balance":"sum", "num_props":"sum", 
 
 st.divider()
 
-st.bar_chart(byZIPCode.set_index("zip_code")["balance"])
+st.bar_chart(byZIPCode.set_index("zip_code")["balance"]) #bar chart showing total balances by ZIP code, with the x-axis as the ZIP code and the y-axis as the total balance
 
 dataFile["delinquencyPeriod"]=dataFile["max_period"]-dataFile["min_period"]
 plt.figure(figsize=(5,3)) #create a scatter plot
@@ -48,7 +44,7 @@ st.divider()
 
 st.write("**An actionable insight is that it would be best to prioritize intervention in a few ZIP codes with unusually high balances, even if delinquency is recent, to prevent large debts from accumulating quickly. Here is a predictive model that is meant to help identify and act early on high-risk ZIP codes (0=low risk, 1=high risk):**")
 
-dataFile["scalePeriod"]=dataFile["delinquencyPeriod"]/dataFile["delinquencyPeriod"].max() #scale delinquency period to a 0-1 range
+dataFile["scalePeriod"]=dataFile["delinquencyPeriod"]/dataFile["delinquencyPeriod"].max()
 dataFile["scaleBalance"]=dataFile["avg_balance"]/dataFile["avg_balance"].max()
 dataFile["scaleProperties"]=dataFile["num_props"]/dataFile["num_props"].max()
 
@@ -62,9 +58,3 @@ ax.set_ylabel("Risk Score")
 ax.set_title("Predicted Risk of High Real Estate Tax Delinquency")
 ax.tick_params(axis="x", rotation=45)
 st.pyplot(fig)
-
-#for col in sumColumns:
-#    dataFile[col]=pd.to_numeric(dataFile[col], errors="coerce") #----
-#dataFile=dataFile.dropna() #drop rows with missing values
-#st.subheader("Summary Statistics")
-#dataFile["avg_balance"]=dataFile["balance"]/dataFile["num_props"]"""
