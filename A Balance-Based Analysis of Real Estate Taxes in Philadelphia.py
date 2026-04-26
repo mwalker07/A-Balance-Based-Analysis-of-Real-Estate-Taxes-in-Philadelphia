@@ -44,6 +44,25 @@ st.write("  -The bar chart (x-axis: zip code, y-axis: total balances) works to s
 st.write("  -The scatter plot answers why there may be a high balance in certain areas. Considering the possibility of long-term unpaid taxes or is it many properties vs a few extreme ones?")
 st.write("From this, it can be concluded that most ZIP codes have relatively low or average tax delinquency levels, while a small number of them stand out with disproportionately high balances. However, some of the high-balance areas do not have especially long delinquency periods, suggesting that debts may have accumulated quickly and are not solely determined by how long taxes go unpaid.")
 
+st.divider()
+
+st.write("**An actionable insight is that it would be best to prioritize intervention in a few ZIP codes with unusually high balances, even if delinquency is recent, to prevent large debts from accumulating quickly. Here is a predictive model that is meant to help identify and act early on high-risk ZIP codes (0=low risk, 1=high risk):**")
+
+dataFile["scalePeriod"]=dataFile["delinquencyPeriod"]/dataFile["delinquencyPeriod"].max() #scale delinquency period to a 0-1 range
+dataFile["scaleBalance"]=dataFile["avg_balance"]/dataFile["avg_balance"].max()
+dataFile["scaleProperties"]=dataFile["num_props"]/dataFile["num_props"].max()
+
+dataFile["riskScore"]=(0.4*dataFile["scaleBalance"]+0.3*dataFile["scalePeriod"]+0.3*dataFile["scaleProperties"]) #risk score based on a weighted average of the three scaled factors
+
+dataSorted=dataFile.sort_values("riskScore", ascending=False) #sort by risk score
+fig, ax=plt.subplots(figsize=(13,3))
+ax.bar(dataSorted["zip_code"].astype(str), dataSorted["riskScore"])
+ax.set_xlabel("ZIP Code")
+ax.set_ylabel("Risk Score")
+ax.set_title("Predicted Risk of High Real Estate Tax Delinquency")
+ax.tick_params(axis="x", rotation=45)
+st.pyplot(fig)
+
 #for col in sumColumns:
 #    dataFile[col]=pd.to_numeric(dataFile[col], errors="coerce") #----
 #dataFile=dataFile.dropna() #drop rows with missing values
